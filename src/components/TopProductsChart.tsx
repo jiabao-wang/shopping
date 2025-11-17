@@ -12,7 +12,7 @@ import {
 
 ChartJS.register(BarElement, CategoryScale, LinearScale, Tooltip, Legend);
 
-export default function TopProductsChart({ data }) {
+export default function TopProductsChart({ data }:{ data: { name: string; quantity: number }[] }) {
   const colors = [
     'rgba(255, 99, 132, 0.6)',
     'rgba(54, 162, 235, 0.6)',

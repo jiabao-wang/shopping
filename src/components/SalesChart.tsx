@@ -20,7 +20,9 @@ ChartJS.register(
   Legend
 );
 
-export default function SalesChart({ data }) {
+export default function SalesChart({ data }: {
+  data: { date: string | Date; amount: number }[];
+}) {
   const chartData = {
     labels: data.map((d) => new Date(d.date).toLocaleDateString()),
     datasets: [

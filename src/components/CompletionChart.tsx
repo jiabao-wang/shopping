@@ -1,12 +1,15 @@
 "use client"
 import { Doughnut } from "react-chartjs-2";
-import { 
+import {
   Chart as ChartJS,
-  ArcElement 
+  ArcElement
 } from "chart.js";
 ChartJS.register(ArcElement);
 
-export default function CompletionChart({ completed, total }) {
+export default function CompletionChart({ completed, total }: {
+  completed: number;
+  total: number;
+}) {
   const chartData = {
     labels: ["完成订单", "其他"],
     datasets: [
