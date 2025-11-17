@@ -10,6 +10,13 @@ import {
 import { getCategories } from "@/app/actions/category.action";
 import UTUpload from "@/components/UTUpload";
 
+type VariantForm = {
+  id?: string;
+  size: string;
+  color: string;
+  stock: number;
+};
+
 export default function ProductPage() {
   const [products, setProducts] = useState<any[]>([]);
   const [categories, setCategories] = useState<any[]>([]);
@@ -31,7 +38,7 @@ export default function ProductPage() {
     categoryId: "",
   });
 
-  const [variantList, setVariantList] = useState([
+  const [variantList, setVariantList] = useState<VariantForm[]>([
     { size: "", color: "", stock: 0 }
   ]);
 
@@ -68,7 +75,7 @@ export default function ProductPage() {
       ...form,
       price: Number(form.price),
       variants: variantList.map(v => ({
-        id: v.id ?? undefined,  // ⭐ 保留已有变体的 ID，否则无法更新
+        id: v.id,
         size: v.size,
         color: v.color,
         stock: Number(v.stock)
