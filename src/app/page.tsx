@@ -30,18 +30,16 @@ interface ExtendedProduct {
   images: string[];
   categoryId: string;
   isActive: boolean;
-  createdAt: Date;
-  updatedAt: Date;
+  createdAt: string | Date;
+  updatedAt: string | Date;
   variants: {
     id: string;
     size: string;
     color: string;
     stock: number;
-    productId: string;
-    createdAt: Date;
-    updatedAt: Date;
   }[];
 }
+
 
 // 定义 CreateOrderInput 类型
 interface CreateOrderInput {
@@ -129,7 +127,7 @@ const HomePage: React.FC = () => {
         if (configRes.success) {
           setConfig(configRes.data);
           // 如果有公告，用 toast 显示（延长显示时间）
-          if (configRes.data.announcement && !hasShownAnnouncement.current) {
+          if (configRes?.data?.announcement && !hasShownAnnouncement.current) {
             toast.success(configRes.data.announcement, { duration: 2000 });
             hasShownAnnouncement.current = true; // 标记已显示
           }
@@ -304,7 +302,7 @@ const HomePage: React.FC = () => {
         incrementDailyOrderCount();
         toast.success(`订单提交成功！剩余今日订单额度: ${limitCheck.remaining - 1}单`);
         // 跳转到订单详情页，假设路由为 /orders/[id]
-        router.push(`/orders/${res.data.id}`);
+        router.push(`/orders/${res?.data?.id}`);
       } else {
         toast.error(res.error || '订单提交失败');
       }

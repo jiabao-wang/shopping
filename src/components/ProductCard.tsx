@@ -11,8 +11,8 @@ interface ProductCardProps {
     images: string[];
     variants: any[]; // 假设 Variant 类型
     isActive: boolean;
-    createdAt: Date;
-    updatedAt: Date;
+    createdAt: string | Date;
+    updatedAt: string | Date;
     categoryId: string;
   };
   onClick: (id: string) => void;

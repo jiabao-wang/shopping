@@ -12,10 +12,15 @@ interface ProductDetailModalProps {
     price: number;
     mainImage: string;
     images: string[];
-    variants: Variant[];
+    variants: {
+      id: string;
+      size: string;
+      color: string;
+      stock: number;
+    }[];
     isActive: boolean;
-    createdAt: Date;
-    updatedAt: Date;
+    createdAt: string | Date;
+    updatedAt: string | Date;
     categoryId: string;
   } | null;
   onClose: () => void;
@@ -33,8 +38,8 @@ export const ProductDetailModal: React.FC<ProductDetailModalProps> = ({
   if (!product) return null;
 
   // 获取选中变体的最大库存
-  const maxStock = selectedVariant 
-    ? product.variants.find((v) => v.id === selectedVariant)?.stock || 1 
+  const maxStock = selectedVariant
+    ? product.variants.find((v) => v.id === selectedVariant)?.stock || 1
     : 1;
 
   // 处理数量变化：支持自由输入，解析为整数，clamp 到 [1, maxStock]
@@ -83,7 +88,7 @@ export const ProductDetailModal: React.FC<ProductDetailModalProps> = ({
                     src={img}
                     alt={`Thumbnail ${idx + 1}`}
                     className="w-24 h-24 rounded cursor-pointer hover:opacity-80 object-cover"
-                    onClick={() => {/* 可以切换主图 */}}
+                    onClick={() => {/* 可以切换主图 */ }}
                   />
                 ))}
               </div>
