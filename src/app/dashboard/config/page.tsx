@@ -29,7 +29,7 @@ export default function ConfigPage() {
   const loadConfig = async () => {
     setLoading(true);
     const res = await getConfig();
-    if (res.success) {
+    if (res.success && res.data) { // 添加 res.data 检查
       const c = res.data;
       setConfigId(c.id);
       setForm({
