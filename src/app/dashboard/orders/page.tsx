@@ -35,7 +35,7 @@ export default function OrdersPage() {
             page: p,
             pageSize
         });
-        if (res.success) {
+        if (res.success && res.data) {
             setOrders(res.data.orders || []);
             setTotalPages(res.data.totalPages || 1);
             // reset selection
