@@ -1,0 +1,128 @@
+// This is your Prisma schema file
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+// 类别表
+model Category {
+  id          String    @id @default(uuid())
+  name        String // 类别名称
+  description String? // 类别描述
+  image       String? // ✅ 类别图像URL
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  products    Product[] // 关联的商品
+
+  @@map("categories")
+}
+
+// 商品表
+model Product {
+  id          String      @id @default(uuid())
+  name        String // 商品名称
+  description String? // 商品描述
+  price       Decimal     @db.Decimal(10, 2) // 商品价格
+  mainImage   String // 主图片URL
+  images      Json // 其他图片URL数组，存储为JSON
+  categoryId  String // 关联的类别ID
+  category    Category    @relation(fields: [categoryId], references: [id])
+  variants    Variant[] // 关联的型号库存
+  orderItems  OrderItem[] // 关联的订单项
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
+  isActive    Boolean     @default(true) // 商品是否上架
+
+  @@map("products")
+}
+
+// 型号库存表
+model Variant {
+  id         String      @id @default(uuid())
+  size       String // 尺寸
+  color      String // 颜色
+  stock      Int // 库存数量
+  productId  String // 关联的商品ID
+  product    Product     @relation(fields: [productId], references: [id])
+  orderItems OrderItem[] // 关联的订单项
+  createdAt  DateTime    @default(now())
+  updatedAt  DateTime    @updatedAt
+
+  @@unique([productId, size, color]) // 确保同一商品的尺寸和颜色组合是唯一的
+  @@map("variants")
+}
+
+// 订单表
+model Order {
+  id            String      @id @default(uuid())
+  orderNumber   String      @unique // 订单编号
+  status        OrderStatus @default(INITIALIZED) // 订单状态
+  totalAmount   Decimal     @db.Decimal(10, 2) // 订单总金额
+  items         OrderItem[] // 订单项
+  customerName  String // 客户姓名
+  customerPhone String // 客户电话
+  address       String // 收货地址
+  createdAt     DateTime    @default(now())
+  updatedAt     DateTime    @updatedAt
+
+  @@map("orders")
+}
+
+// 订单项表（订单和商品的中间表）
+model OrderItem {
+  id        String   @id @default(uuid())
+  orderId   String // 关联的订单ID
+  order     Order    @relation(fields: [orderId], references: [id])
+  productId String // 关联的商品ID
+  product   Product  @relation(fields: [productId], references: [id])
+  variantId String // 关联的型号ID
+  variant   Variant  @relation(fields: [variantId], references: [id])
+  quantity  Int // 购买数量
+  price     Decimal  @db.Decimal(10, 2) // 购买时的单价
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("order_items")
+}
+
+// 订单状态枚举
+enum OrderStatus {
+  INITIALIZED // 初始化
+  SHIPPED // 已发货
+  DELAYED // 延期发货
+  COMPLETED // 订单结束
+}
+
+model Config {
+  id              String   @id @default(uuid())
+  storeName       String   // 商店名称
+  storeLogo       String?  // 商店Logo URL
+  storeDescription String? // 商店简介
+  carouselImages  Json?    // 首页轮播图（多张）
+  announcement    String?  // 首页公告
+  address         String?  // 店铺地址
+  postalCode      String?  // 邮编
+  phone           String?  // 电话
+  email           String?  // 邮箱
+  workHours       String?  // 工作时间
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  @@map("config")
+}
+
+model AdminUser {
+  id        String   @id @default(uuid())
+  username  String   @unique
+  password  String   // 存哈希后的密码
+  name      String?  // 显示昵称
+  role      String   @default("admin") // admin, superadmin, editor 等
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("admin_users")
+}
