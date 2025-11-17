@@ -7,7 +7,7 @@ import { useRouter } from 'next/navigation';
 interface UserInfo {
   id: string;
   username: string;
-  name?: string;
+  name: string | null;  // ← 改成允许 null
   role: string;
 }
 
@@ -41,7 +41,7 @@ export function logout(): boolean {
     return true;
   }
   return false;
-  
+
 }
 
 // Hook：用于组件中检查登录并重定向（如果未登录）

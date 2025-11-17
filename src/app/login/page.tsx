@@ -25,7 +25,7 @@ const LoginPage: React.FC = () => {
 
     try {
       const res = await loginAdminUser({ username, password });
-      if (res.success) {
+      if (res.success && res.data) {
         // 存储用户信息
         storeUser(res.data);
         // 跳转到 dashboard
