@@ -22,7 +22,7 @@ export default function AdminUserPage() {
   const loadUsers = async () => {
     setLoading(true);
     const res = await getAdminUsers();
-    if (res.success) setUsers(res.data);
+    if (res.success) setUsers(res.data || []); // 修复：添加 || [] 避免 undefined
     setLoading(false);
   };
 
@@ -118,7 +118,8 @@ export default function AdminUserPage() {
         <div className="flex gap-3">
           <button
             type="submit"
-            className="bg-blue-500 text-white px-4 py-2 rounded shadow"
+            disabled={loading}
+            className="bg-blue-500 text-white px-4 py-2 rounded shadow disabled:opacity-50"
           >
             {editId ? "保存修改" : "创建用户"}
           </button>
